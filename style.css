@@ -1,274 +1,203 @@
-*{
+/* 全局重置 & 背景 */
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
 }
 
 body {
-    overflow-x: hidden;
-}
-
-.container {
-    background: linear-gradient(135deg, #38e3c3 0%, #4864d6 100%);
-    width: 100%;
-    min-height: 100vh;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    font-family: 'Segoe UI', 'PingFang SC', Roboto, system-ui, -apple-system, sans-serif;
+    background: url('background.png') no-repeat center center / cover;
+    /* 背景图铺满，不重复 */
+    backdrop-filter: blur(2px);
+    /* 轻微背景模糊，增强毛玻璃层次感（可选） */
     display: flex;
-    flex-direction: column;
     align-items: center;
-}
-
-/* 导航栏样式 */
-nav {
-    background: rgba(246, 213, 196, 0.95);
-    border-radius: 0 0 30px 30px;
-    padding: 15px 5%;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    backdrop-filter: blur(10px);
-}
-
-.nav-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
-    width: 100%;
-}
-
-.site-name {
-    font-size: 1.8rem;
-    font-weight: 800;
-    color: #f44566;
-    padding: 8px 0;
-    cursor: default;
-    white-space: nowrap;
-    background: linear-gradient(45deg, #f44566, #ff7b9c);
-    
-    /* 浏览器前缀（旧版浏览器） */
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    
-    /* 标准属性（现代浏览器） */
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    
-    transition: transform 0.3s ease;
-}
-
-.site-name:hover {
-    transform: scale(1.05);
-}
-
-/* 导航菜单样式 */
-.nav-menu {
-    display: flex;
-    list-style: none;
-    align-items: center;
-    transition: all 0.4s ease;
-}
-
-.nav-menu li {
-    padding: 12px 25px;
-    margin: 0 5px;
-    font-size: 1rem;
-    font-weight: 500;
-    color: #555;
-    cursor: pointer;
+    justify-content: center;
     position: relative;
-    z-index: 2;
-    transition: color 0.5s;
-    border-radius: 30px;
-    white-space: nowrap;
+    color: #1e1e2f;
 }
 
-.nav-menu li::after {
-    content: '';
-    background: linear-gradient(45deg, #f44566, #ff7b9c);
-    width: 100%;
-    height: 100%;
-    border-radius: 30px;
+/* ----- 毛玻璃卡片通用样式 ----- */
+.card {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 28px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+    padding: 24px 28px;
+    transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1),
+                box-shadow 0.3s ease,
+                background 0.3s ease;
+    will-change: transform;
+    /* 让悬停放大更平滑 */
+}
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.35);
+    /* 微微更亮，增强毛玻璃通透感 */
+}
+
+/* ----- 左上角个人信息模块 ----- */
+.profile-card {
     position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: -1;
-    opacity: 0;
-    transition: top 0.5s, opacity 0.5s;
-}
-
-.nav-menu li:hover {
-    color: #fff;
-}
-
-.nav-menu li:hover::after {
-    top: 50%;
-    opacity: 1;
-}
-
-/* 移动端菜单切换按钮 */
-.menu-toggle {
-    display: none;
+    top: 36px;
+    left: 36px;
+    width: 240px;
+    display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    width: 30px;
-    height: 21px;
-    cursor: pointer;
-    z-index: 1001;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 30px 28px;
 }
 
-.menu-toggle span {
-    display: block;
-    height: 3px;
-    width: 100%;
-    background: #f44566;
-    border-radius: 3px;
-    transition: all 0.3s ease;
+.avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 4px;
+    background: #e0e5ec; /* 图片占位色，实际加载后覆盖 */
 }
 
-/* 主要内容区域 */
-.content {
-    max-width: 1200px;
+.name {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #1e1e2f;
+    margin: 0;
+}
+
+.bio {
+    font-size: 15px;
+    color: #2c3e50;
+    opacity: 0.85;
+    margin: 2px 0 6px 0;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+}
+
+.status {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 6px;
     width: 100%;
-    padding: 60px 5%;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    padding-top: 12px;
+}
+
+.status-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #2c3e50;
+    opacity: 0.7;
+    letter-spacing: 0.5px;
+}
+
+.status-time {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e1e2f;
+    background: rgba(255, 255, 255, 0.3);
+    padding: 4px 12px;
+    border-radius: 40px;
+    display: inline-block;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    align-self: flex-start;
+}
+
+/* ----- 左侧居中菜单模块 ----- */
+.menu-card {
+    position: absolute;
+    top: 50%;
+    left: 36px;
+    transform: translateY(-50%);
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 28px 22px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* 菜单项 */
+.menu-item {
+    text-decoration: none;
+    color: #1e1e2f;
+    font-size: 20px;
+    font-weight: 500;
+    padding: 10px 16px;
+    border-radius: 60px;
+    background: rgba(255, 255, 255, 0.15);
+    transition: background 0.2s, color 0.2s, transform 0.2s;
     text-align: center;
-    margin-top: 20px;
+    letter-spacing: 1px;
+    border: 1px solid transparent;
 }
 
-.content h1 {
-    font-size: 3rem;
-    color: #fff;
-    margin-bottom: 20px;
-    text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+.menu-item:hover {
+    background: rgba(255, 255, 255, 0.45);
+    color: #000;
+    transform: scale(1.02);
+    border-color: rgba(255, 255, 255, 0.3);
 }
 
-.content p {
-    font-size: 1.2rem;
-    color: rgba(255, 255, 255, 0.9);
-    max-width: 700px;
-    margin: 0 auto 50px;
-    line-height: 1.6;
+/* 菜单悬停时，卡片本身也会放大（来自 .card:hover），但菜单项本身也有悬停效果，两者叠加不冲突 */
+.menu-card:hover .menu-item {
+    /* 保持子项不受父级悬停影响太多，但我们已经做了独立 hover */
 }
 
-.features {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-    margin-top: 40px;
+/* ----- 装饰脚标 ----- */
+.footer-deco {
+    position: absolute;
+    bottom: 30px;
+    right: 40px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(4px);
+    background: rgba(0, 0, 0, 0.08);
+    padding: 8px 18px;
+    border-radius: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.feature-card {
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.feature-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-}
-
-.feature-card h3 {
-    color: #f44566;
-    margin-bottom: 15px;
-    font-size: 1.5rem;
-}
-
-.feature-card p {
-    color: #666;
-    font-size: 1rem;
-    margin-bottom: 0;
-}
-
-/* 响应式设计 */
-@media (max-width: 992px) {
-    .content h1 {
-        font-size: 2.5rem;
-    }
-    
-    .features {
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    }
-}
-
+/* 针对滚动或小屏的简单保护，但主要适配 PC */
 @media (max-width: 768px) {
-    .nav-menu {
-        position: fixed;
-        top: 0;
-        right: -100%;
-        width: 280px;
-        height: 100vh;
-        background: rgba(255, 255, 255, 0.98);
-        flex-direction: column;
-        justify-content: flex-start;
-        padding-top: 100px;
-        box-shadow: -5px 0 20px rgba(0, 0, 0, 0.1);
-        border-radius: 20px 0 0 20px;
+    .profile-card {
+        top: 20px;
+        left: 20px;
+        width: 200px;
+        padding: 20px;
     }
-    
-    .nav-menu.active {
-        right: 0;
+    .menu-card {
+        left: 20px;
+        width: 170px;
+        padding: 20px;
     }
-    
-    .nav-menu li {
-        margin: 15px 0;
-        width: 80%;
-        text-align: center;
-        padding: 15px;
+    .avatar {
+        width: 64px;
+        height: 64px;
     }
-    
-    .menu-toggle {
-        display: flex;
+    .name {
+        font-size: 22px;
     }
-    
-    /* 菜单切换动画 */
-    .menu-toggle.active span:nth-child(1) {
-        transform: translateY(9px) rotate(45deg);
-    }
-    
-    .menu-toggle.active span:nth-child(2) {
-        opacity: 0;
-    }
-    
-    .menu-toggle.active span:nth-child(3) {
-        transform: translateY(-9px) rotate(-45deg);
-    }
-    
-    .content h1 {
-        font-size: 2rem;
-    }
-    
-    .content p {
-        font-size: 1rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .site-name {
-        font-size: 1.5rem;
-    }
-    
-    .content {
-        padding: 40px 5%;
-    }
-    
-    .content h1 {
-        font-size: 1.8rem;
-    }
-    
-    .features {
-        grid-template-columns: 1fr;
-    }
-    
-    nav {
-        padding: 12px 4%;
-        border-radius: 0 0 20px 20px;
+    .menu-item {
+        font-size: 17px;
     }
 }

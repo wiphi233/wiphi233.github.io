@@ -1,81 +1,30 @@
-// 移动端菜单切换功能
-console.log('Script loaded successfully!');
-document.addEventListener('DOMContentLoaded', function() {
-    const menuToggle = document.getElementById('menuToggle');
-    const navMenu = document.getElementById('navMenu');
-    
-    // 页面跳转配置
-    const pageRoutes = {
-        'Home': 'index.html',
-        'Minecraft': 'minecraft.html',
-        'Support': 'support.html'
-    };
-    
-    // 点击菜单切换按钮
-    if (menuToggle) {
-        menuToggle.addEventListener('click', function(e) {
-            e.stopPropagation(); // 阻止事件冒泡
-            navMenu.classList.toggle('active');
-            this.classList.toggle('active');
-        });
+// 网站运行状况计时器
+// 设定网站上线起始时间（此处以 2024-01-01 00:00:00 为例，你可以按需修改）
+const START_DATE = new Date('2024-01-01T00:00:00');
+
+function formatUptime(ms) {
+    const totalSeconds = Math.floor(ms / 1000);
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    return `${days} 天 ${hours} 小时 ${minutes} 分钟`;
+}
+
+function updateUptime() {
+    const now = new Date();
+    const diff = now - START_DATE;
+    if (diff < 0) {
+        // 如果当前时间早于起始时间，显示为 0
+        document.getElementById('uptime').textContent = '0 天 0 小时 0 分钟';
+        return;
     }
-    
-    // 为每个菜单项添加点击事件
-    const menuItems = document.querySelectorAll('.nav-menu li');
-    menuItems.forEach(item => {
-        item.addEventListener('click', function(e) {
-            e.preventDefault(); // 防止默认行为
-            
-            // 检查元素是否有id
-            const pageId = this.id;
-            console.log('点击了菜单项，ID:', pageId); // 调试信息
-            
-            if (!pageId) {
-                console.error('菜单项没有设置id属性');
-                return;
-            }
-            
-            // 如果配置了该页面的路由，则跳转
-            if (pageRoutes[pageId]) {
-                console.log('准备跳转到:', pageRoutes[pageId]); // 调试信息
-                
-                // 如果是移动端菜单，先关闭菜单
-                if (window.innerWidth <= 768) {
-                    if (navMenu) navMenu.classList.remove('active');
-                    if (menuToggle) menuToggle.classList.remove('active');
-                    
-                    // 延迟跳转，让用户看到菜单关闭动画
-                    setTimeout(() => {
-                        window.location.href = pageRoutes[pageId];
-                    }, 300);
-                } else {
-                    // 桌面端直接跳转
-                    window.location.href = pageRoutes[pageId];
-                }
-            } else {
-                console.warn(`未找到页面 ${pageId} 的路由配置`);
-            }
-        });
-    });
-    
-    // 点击页面其他区域关闭菜单
-    document.addEventListener('click', function(event) {
-        if (!navMenu || !menuToggle) return;
-        
-        const isClickInsideNav = navMenu.contains(event.target);
-        const isClickOnToggle = menuToggle.contains(event.target);
-        
-        if (!isClickInsideNav && !isClickOnToggle && window.innerWidth <= 768) {
-            navMenu.classList.remove('active');
-            menuToggle.classList.remove('active');
-        }
-    });
-    
-    // 窗口大小变化时调整菜单
-    window.addEventListener('resize', function() {
-        if (window.innerWidth > 768) {
-            if (navMenu) navMenu.classList.remove('active');
-            if (menuToggle) menuToggle.classList.remove('active');
-        }
-    });
-});
+    document.getElementById('uptime').textContent = formatUptime(diff);
+}
+
+// 初次更新
+updateUptime();
+// 每秒更新一次
+setInterval(updateUptime, 1000);
+
+// 可选：控制台提示
+console.log('✨ WiPhi Blog 已启动 — 毛玻璃 + 悬停动效');
