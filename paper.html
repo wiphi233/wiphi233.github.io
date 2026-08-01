@@ -6,26 +6,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WiPhi Blog</title>
     <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 
 <body>
-    <span class="glass profile">
-        <!-- <img src="head.png" alt="头像" class="avatar" /> -->
-        <h1 class="name">WiPhi Blog</h1>
-        <p>我常常追忆过去......</p>
-        <span class="status">
-            <span class="status-time" id="datetime">✦ 00/00 00:00:00</span>
-        </span>
-    </span>
-
     <div class="menu glass">
         <button class="menu-item" onclick="window.location.href='index.html'">主页</button>
         <button class="menu-item" onclick="window.location.href='404.html'">文章</button>
         <button class="menu-item" onclick="window.location.href='404.html'">友链</button>
     </div>
 
-    <div class="papers" id="papers">
-        <h2 class="papers-title">文章</h2>
+    <!-- <div class="paper glass">
+        <div style="display: flex;">
+            <div class="glass tag">
+                <p>其他</p>
+            </div>
+            <h2>Title</h2>
+        </div>
+        <div class="paper-info">
+            <p style="font-size: 10px; color: rgba(0, 0, 0, 0.6);">发布时间： 0000/00/00 00:00</p>
+        </div>
+        <p>Line 1</p>
+        <p>Line 2</p>
+    </div> -->
+    <div class="paper glass">
+        <div>
+            <div class="glass tag" style="display: flex; position: fixed; right: 50px;">
+                <p>文章</p>
+            </div>
+            <p style="display: flex; position: fixed; right: 200px; top: 25px; color: rgba(0, 0, 0, 0.6);">发布时间： 未知</p>
+        </div>
+        <p class="paper-text" id="content">内容</p>
     </div>
 
     <div class="footer glass">
@@ -34,6 +45,7 @@
                 Worlds Art Contest</a>，版权归原作者所有。</span>
     </div>
 
+    <script src="paper.js"></script>
     <script src="script.js"></script>
 </body>
 

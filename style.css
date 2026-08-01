@@ -1,203 +1,157 @@
-/* 全局重置 & 背景 */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+.profile {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    /* justify-content: end; */
+    /* align-items: end; */
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    width: fit-content;
+}
+
+.glass {
+    background-color: rgba(255, 255, 255, 0.5);
+
+    /* 背景模糊 */
+    backdrop-filter: blur(8px);
+    border-radius: 12px;
+    /* 圆角 */
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    /* 半透明白色边框 */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    /* 轻微阴影增加立体感 */
 }
 
 body {
-    height: 100vh;
-    width: 100vw;
-    overflow: hidden;
-    font-family: 'Segoe UI', 'PingFang SC', Roboto, system-ui, -apple-system, sans-serif;
-    background: url('background.png') no-repeat center center / cover;
-    /* 背景图铺满，不重复 */
-    backdrop-filter: blur(2px);
-    /* 轻微背景模糊，增强毛玻璃层次感（可选） */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    color: #1e1e2f;
+    background-image: url("blurred-image.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
 }
 
-/* ----- 毛玻璃卡片通用样式 ----- */
-.card {
-    background: rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    border-radius: 28px;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
-    padding: 24px 28px;
-    transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1),
-                box-shadow 0.3s ease,
-                background 0.3s ease;
-    will-change: transform;
-    /* 让悬停放大更平滑 */
-}
-
-.card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-    background: rgba(255, 255, 255, 0.35);
-    /* 微微更亮，增强毛玻璃通透感 */
-}
-
-/* ----- 左上角个人信息模块 ----- */
-.profile-card {
-    position: absolute;
-    top: 36px;
-    left: 36px;
-    width: 240px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 30px 28px;
-}
-
-.avatar {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid rgba(255, 255, 255, 0.6);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    margin-bottom: 4px;
-    background: #e0e5ec; /* 图片占位色，实际加载后覆盖 */
-}
-
-.name {
-    font-size: 28px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    color: #1e1e2f;
-    margin: 0;
-}
-
-.bio {
-    font-size: 15px;
-    color: #2c3e50;
-    opacity: 0.85;
-    margin: 2px 0 6px 0;
-    font-weight: 400;
-    letter-spacing: 0.3px;
-}
-
-.status {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    margin-top: 6px;
-    width: 100%;
-    border-top: 1px solid rgba(255, 255, 255, 0.3);
-    padding-top: 12px;
-}
-
-.status-label {
-    font-size: 13px;
-    font-weight: 500;
-    color: #2c3e50;
-    opacity: 0.7;
-    letter-spacing: 0.5px;
-}
-
-.status-time {
-    font-size: 16px;
-    font-weight: 600;
-    color: #1e1e2f;
-    background: rgba(255, 255, 255, 0.3);
-    padding: 4px 12px;
-    border-radius: 40px;
-    display: inline-block;
-    backdrop-filter: blur(4px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    align-self: flex-start;
-}
-
-/* ----- 左侧居中菜单模块 ----- */
-.menu-card {
-    position: absolute;
+.menu {
+    position: fixed;
     top: 50%;
-    left: 36px;
-    transform: translateY(-50%);
-    width: 200px;
+    left: 80px;
+    transform: translate(-50%, -50%);
+    /* 偏移自身宽高的一半 */
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    padding: 28px 22px;
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    justify-content: center;
+    align-items: start;
+    padding: 20px 20px;
+    gap: 20px
 }
 
-/* 菜单项 */
+/* 毛玻璃按钮 */
 .menu-item {
-    text-decoration: none;
-    color: #1e1e2f;
-    font-size: 20px;
+    padding: 12px 32px;
+    background: linear-gradient(to right, rgba(0, 0, 255, 0.15), rgba(255, 0, 255, 0.15));
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50px;
+    /* color: #fff; */
+    font-size: 16px;
     font-weight: 500;
-    padding: 10px 16px;
-    border-radius: 60px;
-    background: rgba(255, 255, 255, 0.15);
-    transition: background 0.2s, color 0.2s, transform 0.2s;
-    text-align: center;
-    letter-spacing: 1px;
-    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .menu-item:hover {
-    background: rgba(255, 255, 255, 0.45);
-    color: #000;
-    transform: scale(1.02);
-    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.30);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.6);
 }
 
-/* 菜单悬停时，卡片本身也会放大（来自 .card:hover），但菜单项本身也有悬停效果，两者叠加不冲突 */
-.menu-card:hover .menu-item {
-    /* 保持子项不受父级悬停影响太多，但我们已经做了独立 hover */
+.menu-item:active {
+    transform: scale(0.96);
 }
 
-/* ----- 装饰脚标 ----- */
-.footer-deco {
-    position: absolute;
-    bottom: 30px;
-    right: 40px;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 14px;
-    font-weight: 300;
-    letter-spacing: 1px;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(4px);
-    background: rgba(0, 0, 0, 0.08);
-    padding: 8px 18px;
-    border-radius: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+.footer {
+    padding: 20px 20px;
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    display: flex;
+    border-radius: 50px;
 }
 
-/* 针对滚动或小屏的简单保护，但主要适配 PC */
-@media (max-width: 768px) {
-    .profile-card {
-        top: 20px;
-        left: 20px;
-        width: 200px;
-        padding: 20px;
-    }
-    .menu-card {
-        left: 20px;
-        width: 170px;
-        padding: 20px;
-    }
-    .avatar {
-        width: 64px;
-        height: 64px;
-    }
-    .name {
-        font-size: 22px;
-    }
-    .menu-item {
-        font-size: 17px;
-    }
+.paper-review {
+    position: fixed;
+    display: flex;
+    left: 200px;
+    top: 200px;
+    flex-direction: column;
+    padding: 20px;
+    width: 60%;
+    line-height: 0px;
+}
+
+.paper {
+    position: fixed;
+    display: flex;
+    left: 200px;
+    top: 80px;
+    flex-direction: column;
+    padding: 20px;
+    right: 100px;
+    line-height: 0px;
+}
+
+.papers-title {
+    position: fixed;
+    display: flex;
+    left: 220px;
+    top: 130px;
+}
+
+.name {
+    /* color: linear-gradient(to right, rgba(0, 0, 255, 1), rgba(255, 0, 255, 1)); */
+    background-image: linear-gradient(to right, red, orange, yellow, lime, cyan, blue, violet);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.tag {
+    margin-right: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: rgba(127, 255, 212, 0.15);
+}
+
+.review-text {
+    /* width: 300px; */
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-clamp: 2;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+    line-height: 1.6;
+    max-height: 3.2em;
+}
+
+.paper-text {
+    display: -webkit-box;
+    /* -webkit-line-clamp: 2; */
+    -webkit-box-orient: vertical;
+    /* line-clamp: 2; */
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+    /* line-height: 1.6; */
+    /* max-height: 3.2em; */
 }
