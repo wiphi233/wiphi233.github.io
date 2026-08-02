@@ -1,28 +1,30 @@
 const timeElement = document.getElementById('datetime');
 
-function updateTime() {
-    const now = new Date();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
+if (timeElement != null) {
+    function updateTime() {
+        const now = new Date();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
 
-    timeElement.textContent = `✦ ${month}/${day} ${hours}:${minutes}:${seconds}`;
+        timeElement.textContent = `✦ ${month}/${day} ${hours}:${minutes}:${seconds}`;
+    }
+
+    updateTime();
+
+    function scheduleNext() {
+        const now = new Date();
+        const delay = 1000 - now.getMilliseconds();
+        setTimeout(() => {
+            updateTime();
+            scheduleNext(); // 异步递归，不会爆栈
+        }, delay);
+    }
+
+    scheduleNext();
 }
-
-updateTime();
-
-function scheduleNext() {
-    const now = new Date();
-    const delay = 1000 - now.getMilliseconds();
-    setTimeout(() => {
-        updateTime();
-        scheduleNext(); // 异步递归，不会爆栈
-    }, delay);
-}
-
-scheduleNext();
 
 function getHtml(target, time, title, tag, preview) {
     return `
@@ -83,7 +85,6 @@ function extractTitleAndPreview(content) {
 async function loadPapers() {
     const container = document.getElementById('papers');
     if (!container) {
-        console.error('页面缺少 id="app" 的容器元素');
         return;
     }
 
