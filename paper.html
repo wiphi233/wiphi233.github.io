@@ -27,25 +27,15 @@
 </head>
 
 <body>
-    <div class="menu glass">
-        <button class="menu-item" onclick="window.location.href='index.html'">主页</button>
-        <button class="menu-item" onclick="window.location.href='404.html'">文章</button>
-        <button class="menu-item" onclick="window.location.href='404.html'">友链</button>
-    </div>
+    <div id="menu-placeholder"></div>
+    <script>
+        fetch('./header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('menu-placeholder').innerHTML = data;
+            });
+    </script>
 
-    <!-- <div class="paper glass">
-        <div style="display: flex;">
-            <div class="glass tag">
-                <p>其他</p>
-            </div>
-            <h2>Title</h2>
-        </div>
-        <div class="paper-info">
-            <p style="font-size: 10px; color: rgba(0, 0, 0, 0.6);">发布时间： 0000/00/00 00:00</p>
-        </div>
-        <p>Line 1</p>
-        <p>Line 2</p>
-    </div> -->
     <div class="paper glass">
         <div>
             <div class="glass tag" style="display: flex; position: fixed; right: 50px;">
@@ -54,12 +44,6 @@
             <p style="display: flex; position: fixed; right: 200px; top: 25px; color: rgba(0, 0, 0, 0.6);">发布时间： 未知</p>
         </div>
         <p class="paper-text" id="content">内容</p>
-    </div>
-
-    <div class="footer glass">
-        <span>© 2026 Yang Fangye</span>
-        <span>背景图片来自 <a href="https://osu.ppy.sh/home/news/2026-07-18-outer-worlds-art-contest-results">osu! Outer
-                Worlds Art Contest</a>，版权归原作者所有。</span>
     </div>
 
     <script src="paper.js"></script>

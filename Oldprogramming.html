@@ -1,0 +1,748 @@
+<!-- <!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WiPhi Blog</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        #ide {
+            position: fixed;
+            display: flex;
+            left: 180px;
+            top: 50px;
+            right: 50px;
+            bottom: 100px;
+            background-color: rgba(46, 59, 84, 0.8);
+            
+        }
+    </style>
+</head>
+<body>
+    <div id="menu-placeholder"></div>
+    <script>
+        fetch('./header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('menu-placeholder').innerHTML = data;
+            });
+    </script>
+
+    <div class="glass" id="ide">
+        <h1 style="position: fixed; left: 50px; color: white">Online IDE</h1>
+
+    </div>
+
+    <link rel="stylesheet" href="style.css" />
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WiPhi Online </title>
+    <style>
+        /* ===== 全局重置 & 字体 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #1a2332;
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* ===== 毛玻璃容器 ===== */
+        .glass {
+            background: rgba(46, 59, 84, 0.72);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+            width: 100%;
+            max-width: 1300px;
+            height: 90vh;
+            min-height: 520px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: height 0.2s;
+            position: relative;
+        }
+
+        /* ===== 顶部栏 ===== */
+        .ide-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 28px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            flex-shrink: 0;
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        .ide-header .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #eef2f8;
+            font-weight: 600;
+            font-size: 18px;
+            letter-spacing: 0.3px;
+            user-select: none;
+        }
+
+        .ide-header .brand svg {
+            width: 24px;
+            height: 24px;
+            fill: #7aa9ff;
+        }
+
+        .ide-header .brand span {
+            background: linear-gradient(135deg, #b7d0ff, #7aa9ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        .ide-header .controls {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .ide-header .controls label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+
+        .ide-header .controls select {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            padding: 8px 16px 8px 14px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #eef2f8;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(255,255,255,0.5)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 34px;
+            min-width: 130px;
+        }
+
+        .ide-header .controls select:hover {
+            background-color: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .ide-header .controls select:focus {
+            border-color: #7aa9ff;
+            box-shadow: 0 0 0 3px rgba(122, 169, 255, 0.2);
+        }
+
+        .ide-header .controls select option {
+            background: #1e2a3a;
+            color: #eef2f8;
+        }
+
+        /* ===== 编辑器主体 ===== */
+        .editor-body {
+            display: flex;
+            flex: 1;
+            min-height: 0;
+            padding: 0 0 0 0;
+            position: relative;
+        }
+
+        /* ===== 行号区域 ===== */
+        .line-numbers {
+            flex-shrink: 0;
+            width: 56px;
+            padding: 16px 0 16px 0;
+            background: rgba(0, 0, 0, 0.2);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+            user-select: none;
+            position: relative;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Menlo', 'Consolas', monospace;
+            font-size: 15px;
+            line-height: 1.65;
+            color: rgba(255, 255, 255, 0.25);
+            text-align: right;
+            padding-right: 14px;
+            letter-spacing: 0.2px;
+            transition: width 0.15s;
+        }
+
+        .line-numbers .line-num-inner {
+            padding-top: 0;
+            white-space: pre;
+            will-change: transform;
+        }
+
+        .line-numbers .line-num-inner span {
+            display: block;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* ===== Textarea 编辑区 ===== */
+        .editor-textarea-wrap {
+            flex: 1;
+            position: relative;
+            min-width: 0;
+            background: rgba(0, 0, 0, 0.08);
+        }
+
+        .editor-textarea-wrap textarea {
+            width: 100%;
+            height: 100%;
+            padding: 16px 20px 16px 18px;
+            border: none;
+            outline: none;
+            resize: none;
+            background: transparent;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Menlo', 'Consolas', monospace;
+            font-size: 15px;
+            line-height: 1.65;
+            color: #e8edf5;
+            caret-color: #7aa9ff;
+            tab-size: 2;
+            -moz-tab-size: 2;
+            letter-spacing: 0.1px;
+            overflow: auto;
+        }
+
+        .editor-textarea-wrap textarea::selection {
+            background: rgba(122, 169, 255, 0.3);
+        }
+
+        .editor-textarea-wrap textarea::placeholder {
+            color: rgba(255, 255, 255, 0.18);
+            font-style: italic;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+        }
+
+        .editor-textarea-wrap textarea::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .editor-textarea-wrap textarea::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 4px;
+        }
+
+        .editor-textarea-wrap textarea::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .editor-textarea-wrap textarea::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .editor-textarea-wrap textarea::-webkit-scrollbar-corner {
+            background: transparent;
+        }
+
+        /* ===== 底部状态栏 ===== */
+        .ide-footer {
+            flex-shrink: 0;
+            padding: 8px 28px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.25);
+            background: rgba(0, 0, 0, 0.1);
+            font-weight: 450;
+            letter-spacing: 0.2px;
+        }
+
+        .ide-footer .status-left {
+            display: flex;
+            gap: 20px;
+        }
+
+        .ide-footer .status-left span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .ide-footer .status-left .badge {
+            background: rgba(122, 169, 255, 0.12);
+            padding: 2px 10px;
+            border-radius: 20px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 11px;
+        }
+
+        .ide-footer .status-right {
+            display: flex;
+            gap: 16px;
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* ===== 空状态 ===== */
+        .editor-empty-hint {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: rgba(255, 255, 255, 0.06);
+            font-size: 15px;
+            font-weight: 400;
+            pointer-events: none;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        /* ===== 滚动同步 - 行号区域滚动条隐藏 ===== */
+        .line-numbers::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+        }
+
+        .line-numbers {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .glass {
+                height: 94vh;
+                border-radius: 18px;
+                min-height: 400px;
+            }
+            .ide-header {
+                padding: 12px 18px;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .ide-header .brand {
+                font-size: 15px;
+            }
+            .ide-header .controls select {
+                min-width: 100px;
+                font-size: 13px;
+                padding: 6px 30px 6px 12px;
+            }
+            .line-numbers {
+                width: 42px;
+                padding-right: 10px;
+                font-size: 13px;
+                padding-left: 6px;
+            }
+            .editor-textarea-wrap textarea {
+                font-size: 13px;
+                padding: 12px 14px 12px 14px;
+            }
+            .ide-footer {
+                padding: 6px 16px;
+                font-size: 11px;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+            .ide-footer .status-left {
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+            .editor-empty-hint {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .ide-header .brand {
+                font-size: 13px;
+            }
+            .ide-header .brand svg {
+                width: 18px;
+                height: 18px;
+            }
+            .ide-header .controls label {
+                font-size: 11px;
+            }
+            .ide-header .controls select {
+                min-width: 80px;
+                font-size: 12px;
+                padding: 4px 26px 4px 10px;
+            }
+            .line-numbers {
+                width: 34px;
+                padding-right: 6px;
+                font-size: 11px;
+                padding-left: 4px;
+            }
+            .editor-textarea-wrap textarea {
+                font-size: 12px;
+                padding: 10px 10px 10px 12px;
+                line-height: 1.6;
+            }
+            .ide-footer {
+                font-size: 10px;
+                padding: 4px 12px;
+            }
+        }
+
+        /* ===== 自定义滚动条 (Firefox) ===== */
+        .editor-textarea-wrap textarea {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+        }
+
+        /* ===== 主题微光 ===== */
+        .glass::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 60%;
+            height: 80%;
+            background: radial-gradient(ellipse, rgba(122, 169, 255, 0.04) 0%, transparent 70%);
+            pointer-events: none;
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .glass>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== 行号活跃行高亮 (可选) ===== */
+        .line-numbers .active-line {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* ===== 加载字体 (后备) ===== */
+        @supports (font-variation-settings: normal) {
+            .line-numbers,
+            .editor-textarea-wrap textarea {
+                font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="glass" id="app">
+
+        <!-- ===== 顶部栏 ===== -->
+        <header class="ide-header">
+            <div class="brand">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z" opacity="0.3"/>
+                </svg>
+                <span>Online IDE</span>
+            </div>
+            <div class="controls">
+                <label for="langSelect">语言</label>
+                <select id="langSelect">
+                    <option value="javascript">JavaScript</option>
+                    <option value="python">Python</option>
+                    <option value="html">HTML</option>
+                    <option value="css">CSS</option>
+                    <option value="java">Java</option>
+                    <option value="cpp">C++</option>
+                    <option value="csharp">C#</option>
+                    <option value="go">Go</option>
+                    <option value="rust">Rust</option>
+                    <option value="typescript">TypeScript</option>
+                    <option value="php">PHP</option>
+                    <option value="ruby">Ruby</option>
+                    <option value="swift">Swift</option>
+                    <option value="kotlin">Kotlin</option>
+                    <option value="sql">SQL</option>
+                    <option value="shell">Shell</option>
+                </select>
+            </div>
+        </header>
+
+        <!-- ===== 编辑器主体 ===== -->
+        <div class="editor-body">
+
+            <!-- 行号 -->
+            <div class="line-numbers" id="lineNumbers">
+                <div class="line-num-inner" id="lineNumInner">
+                    <span>1</span>
+                </div>
+            </div>
+
+            <!-- 文本输入 -->
+            <div class="editor-textarea-wrap">
+                <textarea id="codeEditor" placeholder="在此输入代码…" spellcheck="false" autofocus></textarea>
+                <div class="editor-empty-hint" id="emptyHint">⌨️ 开始编码</div>
+            </div>
+        </div>
+
+        <!-- ===== 底部状态栏 ===== -->
+        <footer class="ide-footer">
+            <div class="status-left">
+                <span>
+                    <span>行</span>
+                    <span id="lineCount">1</span>
+                </span>
+                <span>
+                    <span>列</span>
+                    <span id="colCount">0</span>
+                </span>
+                <span class="badge" id="langBadge">JS</span>
+            </div>
+            <div class="status-right">
+                <span>Tab: 2 空格</span>
+                <span>UTF-8</span>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ===== DOM 引用 =====
+            const editor = document.getElementById('codeEditor');
+            const lineNumInner = document.getElementById('lineNumInner');
+            const lineNumbers = document.getElementById('lineNumbers');
+            const lineCountEl = document.getElementById('lineCount');
+            const colCountEl = document.getElementById('colCount');
+            const langSelect = document.getElementById('langSelect');
+            const langBadge = document.getElementById('langBadge');
+            const emptyHint = document.getElementById('emptyHint');
+
+            // ===== 语言占位符映射 =====
+            const placeholders = {
+                javascript: '// 输入 JavaScript 代码…',
+                python: '# 输入 Python 代码…',
+                html: '<!-- 输入 HTML 代码… -->',
+                css: '/* 输入 CSS 代码… */',
+                java: '// 输入 Java 代码…',
+                cpp: '// 输入 C++ 代码…',
+                csharp: '// 输入 C# 代码…',
+                go: '// 输入 Go 代码…',
+                rust: '// 输入 Rust 代码…',
+                typescript: '// 输入 TypeScript 代码…',
+                php: '<?php // 输入 PHP 代码… ?>',
+                ruby: '# 输入 Ruby 代码…',
+                swift: '// 输入 Swift 代码…',
+                kotlin: '// 输入 Kotlin 代码…',
+                sql: '-- 输入 SQL 代码…',
+                shell: '# 输入 Shell 代码…'
+            };
+
+            const langBadges = {
+                javascript: 'JS',
+                python: 'PY',
+                html: 'HTML',
+                css: 'CSS',
+                java: 'JAVA',
+                cpp: 'C++',
+                csharp: 'C#',
+                go: 'GO',
+                rust: 'RS',
+                typescript: 'TS',
+                php: 'PHP',
+                ruby: 'RB',
+                swift: 'SWIFT',
+                kotlin: 'KT',
+                sql: 'SQL',
+                shell: 'SH'
+            };
+
+            // ===== 更新行号 =====
+            function updateLineNumbers() {
+                const text = editor.value;
+                const lines = text.split('\n');
+                const count = lines.length;
+
+                // 生成行号 HTML
+                let html = '';
+                for (let i = 1; i <= count; i++) {
+                    html += `<span>${i}</span>`;
+                }
+                lineNumInner.innerHTML = html || '<span>1</span>';
+
+                // 更新状态栏
+                lineCountEl.textContent = count;
+
+                // 显示/隐藏空状态提示
+                if (text.trim() === '' && count <= 1) {
+                    emptyHint.style.display = 'block';
+                } else {
+                    emptyHint.style.display = 'none';
+                }
+
+                // 同步滚动
+                syncScroll();
+            }
+
+            // ===== 同步滚动 =====
+            function syncScroll() {
+                lineNumbers.scrollTop = editor.scrollTop;
+            }
+
+            // ===== 更新行列位置 =====
+            function updateCursorPosition() {
+                const text = editor.value;
+                const pos = editor.selectionStart;
+                const lines = text.substring(0, pos).split('\n');
+                const row = lines.length;
+                const col = lines[lines.length - 1].length;
+                colCountEl.textContent = col;
+                // 行号已经在 updateLineNumbers 中更新了
+            }
+
+            // ===== 语言切换 =====
+            function applyLanguage(lang) {
+                const placeholder = placeholders[lang] || '在此输入代码…';
+                editor.placeholder = placeholder;
+                const badge = langBadges[lang] || lang.toUpperCase().slice(0, 3);
+                langBadge.textContent = badge;
+                // 可选：添加一个数据属性
+                editor.dataset.lang = lang;
+            }
+
+            // ===== 处理输入事件 =====
+            function onInput() {
+                updateLineNumbers();
+                updateCursorPosition();
+            }
+
+            // ===== 处理选择/光标移动 =====
+            function onCursorMove() {
+                updateCursorPosition();
+            }
+
+            // ===== 处理滚动 =====
+            function onScroll() {
+                syncScroll();
+            }
+
+            // ===== 处理 Tab 键 =====
+            function onTabKey(e) {
+                if (e.key === 'Tab') {
+                    e.preventDefault();
+                    const start = editor.selectionStart;
+                    const end = editor.selectionEnd;
+                    const text = editor.value;
+                    // 插入 2 个空格
+                    const indent = '  ';
+                    editor.value = text.substring(0, start) + indent + text.substring(end);
+                    editor.selectionStart = editor.selectionEnd = start + indent.length;
+                    onInput();
+                }
+            }
+
+            // ===== 窗口尺寸变化时保持行号对齐 =====
+            function onResize() {
+                // 行号区域宽度自适应（根据最大行数）
+                const lineCount = lineNumInner.children.length || 1;
+                const digitCount = String(lineCount).length;
+                const minWidth = 36;
+                const width = Math.max(minWidth, digitCount * 12 + 24);
+                lineNumbers.style.width = width + 'px';
+            }
+
+            // ===== 初始化 =====
+            function init() {
+                // 设置默认语言
+                const defaultLang = 'javascript';
+                langSelect.value = defaultLang;
+                applyLanguage(defaultLang);
+
+                // 初始内容 (示例)
+                editor.value = `// 欢迎使用 Online IDE 👋\n// 轻量 · 简洁 · 专注\n\nfunction greet(name) {\n  console.log("Hello, " + name + "!");\n}\n\ngreet("开发者");`;
+
+                // 更新所有
+                onInput();
+                onResize();
+
+                // 绑定事件
+                editor.addEventListener('input', onInput);
+                editor.addEventListener('scroll', onScroll);
+                editor.addEventListener('keydown', onTabKey);
+                editor.addEventListener('click', onCursorMove);
+                editor.addEventListener('keyup', onCursorMove);
+                editor.addEventListener('select', onCursorMove);
+
+                // 语言切换
+                langSelect.addEventListener('change', function() {
+                    const lang = this.value;
+                    applyLanguage(lang);
+                    // 聚焦编辑器
+                    editor.focus();
+                });
+
+                // 窗口尺寸变化
+                window.addEventListener('resize', onResize);
+
+                // 点击编辑器时隐藏空提示
+                editor.addEventListener('focus', function() {
+                    if (editor.value.trim() === '' && editor.value.split('\n').length <= 1) {
+                        emptyHint.style.display = 'none';
+                    }
+                });
+
+                editor.addEventListener('blur', function() {
+                    if (editor.value.trim() === '' && editor.value.split('\n').length <= 1) {
+                        emptyHint.style.display = 'block';
+                    }
+                });
+
+                // 额外：当编辑器内容为空时，显示空提示
+                // 已经包含在 updateLineNumbers 中
+
+                // 小技巧：点击行号区域聚焦编辑器
+                lineNumbers.addEventListener('click', function() {
+                    editor.focus();
+                });
+
+                console.log('✨ Online IDE 已启动');
+            }
+
+            // ===== DOM 就绪后初始化 =====
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+
+        })();
+    </script>
+
+</body>
+
+</html>

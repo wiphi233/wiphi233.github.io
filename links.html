@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WiPhi Blog</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        .title {
+            position: fixed;
+            display: flex;
+            left: 200px;
+            top: 50px;
+        }
+
+        .card {
+            /* position: fixed; */
+            display: flex;
+            flex-direction: column;
+            padding: 10px 15px;
+            /* left: 200px; */
+            /* top: 150px; */
+            line-height: 25px;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            background-color: rgba(255, 255, 255, 0.7);
+            scale: 1.01;
+        }
+
+        .cards {
+            position: fixed;
+            left: 200px;
+            top: 150px;
+            right: 30px;
+            bottom: 80px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            overflow-y: auto;
+            box-sizing: border-box;
+            scrollbar-width: thin;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="menu-placeholder"></div>
+    <script>
+        fetch('./header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('menu-placeholder').innerHTML = data;
+            });
+    </script>
+
+    <h1 class="title">友情链接</h1>
+    <div class="cards">
+        <a class="card glass" href="https://github.com/" target="_blank" rel="noopener noreferrer">
+            <span class="friend-name"><b>Github</b></span>
+            <span class="friend-description">全球最大代码托管平台</span>
+        </a>
+        <a class="card glass" href="https://codeforces.com/" target="_blank" rel="noopener noreferrer">
+            <span class="friend-name"><b>Codeforces</b></span>
+            <span class="friend-description">全球最大编程竞赛平台</span>
+        </a>
+        <a class="card glass" href="https://oi-wiki.org/" target="_blank" rel="noopener noreferrer">
+            <span class="friend-name"><b>OI Wiki</b></span>
+            <span class="friend-description">编程竞赛知识整合</span>
+        </a>
+        <a class="card glass" href="https://luogu.com.cn/" target="_blank" rel="noopener noreferrer">
+            <span class="friend-name"><b>洛谷 Luogu</b></span>
+            <span class="friend-description">计算机科学教育新生态</span>
+        </a>
+        <a class="card glass" href="https://www.yundouxueyuan.com/" target="_blank" rel="noopener noreferrer">
+            <span class="friend-name"><b>云斗学院</b></span>
+            <span class="friend-description">yundouxueyuan</span>
+        </a>
+        <a class="card glass" href="https://chat.deepseek.com/" target="_blank" rel="noopener noreferrer">
+            <span class="friend-name"><b>Deepseek</b></span>
+            <span class="friend-description">生成式大语言模型</span>
+        </a>
+        <a class="card glass" href="https://doubao.com/" target="_blank" rel="noopener noreferrer">
+            <span class="friend-name"><b>豆包</b></span>
+            <span class="friend-description">另一个生成式大语言模型</span>
+        </a>
+        <a class="card glass" href="https://bilibili.com/" target="_blank" rel="noopener noreferrer">
+            <span class="friend-name"><b>Bilibili</b></span>
+            <span class="friend-description">哔哩哔哩 (゜-゜)つロ 干杯~</span>
+        </a>
+        <a class="card glass" href="https://kpsecond.netlify.app/" target="_blank" rel="noopener noreferrer">
+            <span class="friend-name"><b>KPS Test</b></span>
+            <span class="friend-description">?!Vibro!?</span>
+        </a>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>

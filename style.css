@@ -167,7 +167,7 @@ body {
     padding: 20px 20px;
     overflow-y: auto;
     /* ✅ 启用垂直滚动 */
-    width: calc(80% - 120px);
+    width: calc(100% - 400px);
     /* 适配屏幕 */
     box-sizing: border-box;
     scrollbar-width: thin;
