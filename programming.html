@@ -7,14 +7,106 @@
     <title>WiPhi Blog</title>
     <link rel="stylesheet" href="style.css" />
     <style>
+        /* 保持原有 #ide 样式，额外添加内部布局 */
         #ide {
             position: fixed;
             display: flex;
+            flex-direction: column;
             left: 180px;
             top: 50px;
             right: 50px;
             bottom: 100px;
             background-color: rgba(46, 59, 84, 0.8);
+            padding: 20px;
+            box-sizing: border-box;
+            gap: 12px;
+        }
+
+        #ide h1 {
+            margin: 0;
+            color: white;
+            font-size: 20px;
+            flex-shrink: 0;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        /* 编辑器包裹层（行号 + textarea 水平排列） */
+        .editor-wrapper {
+            flex: 1;
+            display: flex;
+            min-height: 0;          /* 防止flex溢出 */
+            border-radius: 10px;
+            overflow: hidden;       /* 圆角裁剪 */
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* 行号区域 */
+        .line-numbers {
+            padding: 16px 8px 16px 14px;
+            background: rgba(0, 0, 0, 0.15);
+            color: rgba(255, 255, 255, 0.25);
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            text-align: right;
+            user-select: none;
+            overflow: hidden;
+            flex-shrink: 0;
+            min-width: 40px;
+            white-space: pre;
+            box-sizing: border-box;
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        /* textarea 样式（原有基础上微调） */
+        #ide textarea {
+            flex: 1;
+            width: 100%;
+            padding: 16px 18px;
+            background: transparent;       /* 透明，由父容器背景托底 */
+            border: none;
+            border-radius: 0;
+            color: #e6edf5;
+            font-size: 14px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            line-height: 1.6;
+            resize: none;
+            outline: none;
+            box-sizing: border-box;
+            /* 滚动条已在父容器内，无需额外边框 */
+        }
+
+        /* 聚焦时由父容器边框控制，textarea 本身无边框 */
+        .editor-wrapper:focus-within {
+            border-color: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.07);
+        }
+
+        /* 滚动条美化（直接作用于 textarea） */
+        #ide textarea::-webkit-scrollbar {
+            width: 5px;
+        }
+        #ide textarea::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        #ide textarea::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+        }
+        #ide textarea::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+        #ide textarea {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.15) rgba(255,255,255,0.05);
+        }
+
+        /* 确保光标闪烁可见（默认已闪烁，此处设置亮色） */
+        #ide textarea {
+            caret-color: #a0c8ff;
         }
     </style>
 </head>
@@ -29,10 +121,65 @@
     </script>
 
     <div class="glass" id="ide">
-        <h1 style="position: fixed; left: 50px; color: white">Online IDE</h1>
-
+        <h1>Online IDE</h1>
+        <div class="editor-wrapper">
+            <!-- 行号 -->
+            <div class="line-numbers" id="lineNumbers">1</div>
+            <!-- 文本框 -->
+            <textarea id="codeEditor" placeholder="Enter your code..." spellcheck="false"></textarea>
+        </div>
     </div>
 
-    <link rel="stylesheet" href="style.css" />
+    <script>
+        (function() {
+            const editor = document.getElementById('codeEditor');
+            const lineNumbers = document.getElementById('lineNumbers');
+
+            // ---------- 更新行号 ----------
+            function updateLineNumbers() {
+                const lines = editor.value.split('\n').length;
+                let nums = '';
+                for (let i = 1; i <= lines; i++) {
+                    nums += i + '\n';
+                }
+                lineNumbers.textContent = nums;
+            }
+
+            // ---------- 同步滚动 ----------
+            editor.addEventListener('scroll', function() {
+                lineNumbers.scrollTop = this.scrollTop;
+            });
+
+            // ---------- 输入时更新行号 ----------
+            editor.addEventListener('input', updateLineNumbers);
+
+            // ---------- Tab 键插入四个空格 ----------
+            editor.addEventListener('keydown', function(e) {
+                if (e.key === 'Tab') {
+                    e.preventDefault();
+                    const start = this.selectionStart;
+                    const end = this.selectionEnd;
+                    // 插入四个空格
+                    this.value = this.value.substring(0, start) + '    ' + this.value.substring(end);
+                    // 将光标置于插入的四个空格之后
+                    this.selectionStart = this.selectionEnd = start + 4;
+                    // 触发行号更新
+                    updateLineNumbers();
+                    // 手动触发滚动同步（以防内容变化导致滚动偏移）
+                    lineNumbers.scrollTop = this.scrollTop;
+                }
+            });
+
+            // ---------- 初始化 ----------
+            updateLineNumbers();
+            // 初次同步滚动
+            setTimeout(() => {
+                lineNumbers.scrollTop = editor.scrollTop;
+            }, 0);
+
+            // ---------- 光标闪烁（默认已闪烁，无需额外处理，仅确保 caret-color 已设置） ----------
+            // 额外：当编辑器失去/获得焦点时，行号颜色可微调（可选），但不做多余操作。
+        })();
+    </script>
 </body>
 </html>
